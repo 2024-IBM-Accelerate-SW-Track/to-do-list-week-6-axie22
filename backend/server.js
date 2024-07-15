@@ -61,14 +61,28 @@ async function addItem (request, response) {
 app.get("/get/items", getItems)
 async function getItems (request, response) {
     //begin here
-
+    try {
+        var data = await fsPromises.readFile("database.json");
+        response.json(JSON.parse(data));
+    } catch (err) {
+        console.log("error: ", err);
+        response.sendStatus(500);
+    }
 };
 
 //** week 6, search items service */
 app.get("/get/searchitem", searchItems) 
 async function searchItems (request, response) {
     //begin here
-
+    var searchField = request.query.taskname;
+    try {
+        var json = JSON.parse(await fsPromises.readFile("database.json"));
+        var returnData = json.filter(jsondata => jsondata.Task === searchField);
+        response.json(returnData);
+    } catch (err) {
+        console.log("error: ", err);
+        response.sendStatus(500);
+    }
 };
 
 
